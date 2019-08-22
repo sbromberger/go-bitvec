@@ -2,7 +2,9 @@ package bitvec
 
 import "sync/atomic"
 
-// ABitVec is a bitvector
+// ABitVec is a bitvector backed by an array of uint32.
+// Bits are referenced by bucket (uint32) and bit within
+// the bucket.
 type ABitVec []uint32
 
 // NewABitVec returns a new bitvector with the given size
@@ -32,8 +34,8 @@ func (bv ABitVec) GetBuckets4(a, b, c, d uint32) (x, y, z, w uint32) {
 	return
 }
 
-// TrySet will set the bit located at `k` and will
-// return success
+// TrySet will set the bit located at `k` if it is unset
+// and will return true if the bit flipped, false otherwise.
 func (bv ABitVec) TrySet(k uint32) bool {
 	bucket, bit := bv.offset(k)
 retry:
@@ -47,7 +49,8 @@ retry:
 	goto retry
 }
 
-// TrySetWith ...
+// TrySetWith performs TrySet but the caller is responsible
+// for passing in the old bucket.
 func (bv ABitVec) TrySetWith(old uint32, k uint32) bool {
 	bucket, bit := bv.offset(k)
 	if old&bit != 0 {
