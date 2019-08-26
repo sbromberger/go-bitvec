@@ -8,8 +8,8 @@ import "sync/atomic"
 type ABitVec []uint32
 
 // NewABitVec returns a new bitvector with the given size
-func NewABitVec(size int) ABitVec {
-	return make(ABitVec, uint(size+mask)>>nbits)
+func NewABitVec(size uint32) ABitVec {
+	return make(ABitVec, (size+mask)>>nbits)
 }
 
 func (ABitVec) isBucketBitUnset(bucket uint32, k uint32) bool {

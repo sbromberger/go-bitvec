@@ -2,19 +2,19 @@
 package bitvec
 
 const (
-	nbits = 5          // 32 bits in a uint32
-	ws    = 1 << nbits // constant 32
-	mask  = ws - 1     // all ones
+	nbits   = 5          // 32 bits in a uint32
+	ws      = 1 << nbits // constant 64
+	mask    = ws - 1     // all ones
+	bitsize = 2 ^ nbits
 )
 
 // BitVec is a nonatomic bit vector.
 type BitVec []uint32
 
 // NewBitVec creates a non-atomic bitvector.
-func NewBitVec(size int) BitVec {
-	usize := uint(size)
-	nints := usize / ws
-	if usize-(nints*32) != 0 {
+func NewBitVec(size uint32) BitVec {
+	nints := size / ws
+	if size-(nints*bitsize) != 0 {
 		nints++
 	}
 
